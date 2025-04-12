@@ -1,1 +1,84 @@
-<?php
+{% extends 'base.html.twig' %}
+
+{% block title %}Информация о погоде{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .weather-info {
+            max-width: 600px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: linear-gradient(135deg, #6DD5FA, #2980B9);
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            color: white;
+        }
+
+        .weather-info h1 {
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 1.8rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .weather-details {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        .weather-details p {
+            margin: 1rem 0;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .weather-details strong {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .weather-details img {
+            display: block;
+            margin: 1rem auto;
+            width: 100px;
+            height: 100px;
+            filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.2));
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .weather-info {
+                margin: 1rem;
+                padding: 1rem;
+            }
+
+            .weather-info h1 {
+                font-size: 1.5rem;
+            }
+
+            .weather-details {
+                padding: 1rem;
+            }
+        }
+
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="weather-info">
+        <h1>Текущая погода в {{ weather.city }}, {{ weather.country }}</h1>
+
+        <div class="weather-details">
+            <p><strong>Температура:</strong> {{ weather.temperature }}°C</p>
+            <img src="{{ weather.icon }}" alt="Погодные условия">
+            <p><strong>Состояние:</strong> {{ weather.condition }}</p>
+            <p><strong>Влажность:</strong> {{ weather.humidity }}%</p>
+            <p><strong>Скорость ветра:</strong> {{ weather.windSpeed }} км/ч</p>
+            <p><strong>Последнее обновление:</strong> {{ weather.lastUpdated }}</p>
+        </div>
+    </div>
+{% endblock %}

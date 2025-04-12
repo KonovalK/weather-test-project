@@ -1,0 +1,127 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {% set titles = {
+        'city_not_found': 'City Not Found',
+        'invalid_api_key': 'API Configuration Error',
+        'rate_limit_exceeded': 'Rate Limit Exceeded',
+        'connection_error': 'Service Unavailable',
+        'default': 'Error'
+    } %}
+    {{ titles[context.error_type] ?? 'Error' }}
+{% endblock %}
+
+{% block body %}
+    <div class="error-container">
+        {# Заголовок в залежності від типу помилки #}
+        <h1>
+            {% set headers = {
+                'city_not_found': 'City Not Found',
+                'invalid_api_key': 'API Configuration Error',
+                'rate_limit_exceeded': 'Too Many Requests',
+                'connection_error': 'Service Unavailable',
+                'default': 'An Error Occurred'
+            } %}
+            {{ headers[context.error_type] ?? 'An Error Occurred' }}
+        </h1>
+
+        {# Основне повідомлення про помилку #}
+        <p class="error-message">{{ error }}</p>
+
+        {# Додаткове повідомлення в залежності від типу помилки #}
+        {% set help_messages = {
+            'city_not_found': 'Please check the city name and try again.',
+            'invalid_api_key': 'Please contact the administrator.',
+            'rate_limit_exceeded': 'Please try again later.',
+            'connection_error': "We're having trouble connecting to the weather service. Please try again later.",
+            'default': 'If this problem persists, please contact support.'
+        } %}
+        <p class="help-message">{{ help_messages[context.error_type] ?? help_messages.default }}</p>
+
+        {# Додаткові дії #}
+        <div class="actions">
+            {% if context.error_type == 'city_not_found' %}
+                <a href="{{ path('weather_info', {city: 'London'}) }}" class="btn btn-primary">Try with London</a>
+            {% endif %}
+            <a href="javascript:history.back()" class="btn btn-secondary">Go Back</a>
+        </div>
+
+        {# Технічні деталі #}
+        <div class="error-details">
+            {% if city is defined %}
+                <p><small>Requested City: {{ city }}</small></p>
+            {% endif %}
+            {% if context is defined and context is not empty and app.environment == 'dev' %}
+                <div class="technical-details">
+                    <h3>Technical Details:</h3>
+                    <pre>{{ context|json_encode(constant('JSON_PRETTY_PRINT')) }}</pre>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <style>
+        .error-container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .error-message {
+            color: #dc3545;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+
+        .help-message {
+            color: #6c757d;
+            margin-bottom: 20px;
+        }
+
+        .actions {
+            margin: 20px 0;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 8px 16px;
+            margin-right: 10px;
+            border-radius: 4px;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: #007bff;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .error-details {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #dee2e6;
+            font-size: 0.9em;
+            color: #6c757d;
+        }
+
+        .technical-details {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 4px;
+        }
+
+        .technical-details pre {
+            margin: 0;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+    </style>
+{% endblock %}
