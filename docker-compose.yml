@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   nginx:
     image: nginx:latest
@@ -12,14 +10,9 @@ services:
       - php
 
   php:
-    image: php:8.2-fpm
+    build:
+      context: .
+      dockerfile: Dockerfile
     volumes:
       - .:/var/www
     working_dir: /var/www
-    command: php-fpm
-
-  composer:
-    image: composer:latest
-    volumes:
-      - .:/app
-    working_dir: /app
